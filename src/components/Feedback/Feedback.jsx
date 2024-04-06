@@ -1,11 +1,11 @@
 // import React from 'react';
 
-export default function Feedback() {
+export default function Feedback({ feedback: { good, neutral, bad } }) {
   return (
     <ul>
-      <li>Good</li>
-      <li>Neutral</li>
-      <li>Bad</li>
+      <li>Good: {good}</li>
+      <li>Neutral: {neutral}</li>
+      <li>Bad: {bad}</li>
       <li>Total</li>
       <li>Positive</li>
     </ul>

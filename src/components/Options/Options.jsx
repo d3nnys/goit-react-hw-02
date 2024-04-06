@@ -1,20 +1,22 @@
-// import React from 'react'
+import css from './Options.module.css';
 
-export default function Options() {
+export default function Options({ updateFeedback, onInit }) {
   return (
-    <ul>
+    <ul className={css.list}>
       <li>
-        <button>Good</button>
+        <button onClick={() => updateFeedback('Good')}>Good</button>
       </li>
       <li>
-        <button>Neutral</button>
+        <button onClick={() => updateFeedback('Neutral')}>Neutral</button>
       </li>
       <li>
-        <button>Bad</button>
+        <button onClick={() => updateFeedback('Bad')}>Bad</button>
       </li>
-      <li>
-        <button>Reset</button>
-      </li>
+      {updateFeedback > 0 && (
+        <li>
+          <button onClick={() => onInit('Reset')}>Reset</button>
+        </li>
+      )}
     </ul>
   );
 }
