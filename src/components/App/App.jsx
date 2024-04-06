@@ -1,29 +1,65 @@
-import { useState } from 'react';
-import './App.css';
-import 'modern-normalize';
+import { useState, useEffect } from 'react';
 import Description from '../Description/Description';
 import Options from '../Options/Options';
 import Feedback from '../Feedback/Feedback';
+import Notification from '../Notification/Notification';
+import 'modern-normalize';
+import './App.css';
 
 export default function App() {
-  const [clicks, setClicks] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [clicks, setClicks] = useState(() => {
+    const savedClicks = window.localStorage.getItem('current-click');
+
+    if (savedClicks !== null) {
+      return JSON.parse(savedClicks);
+    }
+
+    return {
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    };
   });
 
+  useEffect(() => {
+    localStorage.setItem('current-click', JSON.stringify(clicks));
+  }, [clicks]);
+
+  const resetClicks = () => {
+    setClicks({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
+
+  const totalFeedback = clicks.good + clicks.neutral + clicks.bad;
+
+  const ratePositiveFeedback = Math.round((clicks.good / totalFeedback) * 100);
+
   const updateFeedback = feedbackType => {
-    setClicks(Feedback => ({
-      ...Feedback,
-      [feedbackType]: Feedback[feedbackType] + 1,
+    setClicks(prevFeedback => ({
+      ...prevFeedback,
+      [feedbackType]: prevFeedback[feedbackType] + 1,
     }));
   };
 
   return (
     <div>
       <Description />
-      <Options updateFeedback={updateFeedback} />
-      <Feedback feedback={clicks} />
+      <Options
+        updateFeedback={updateFeedback}
+        totalFeedback={totalFeedback}
+        onReset={resetClicks}
+      />
+      {!totalFeedback > 0 && <Notification />}
+      {totalFeedback > 0 && (
+        <Feedback
+          feedback={clicks}
+          total={totalFeedback}
+          positive={ratePositiveFeedback}
+        />
+      )}
     </div>
   );
 }
