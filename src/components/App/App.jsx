@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import Description from '../Description/Description';
 import Options from '../Options/Options';
 import Feedback from '../Feedback/Feedback';
@@ -6,6 +7,7 @@ import Notification from '../Notification/Notification';
 import './App.css';
 
 export default function App() {
+  const [block] = useAutoAnimate();
   const [clicks, setClicks] = useState(() => {
     const savedClicks = window.localStorage.getItem('current-click');
 
@@ -44,7 +46,7 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div ref={block}>
       <Description />
       <Options
         updateFeedback={updateFeedback}
